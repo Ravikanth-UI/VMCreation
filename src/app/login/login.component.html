@@ -1,0 +1,23 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-center">
+    <div class="shadow px-3 py-5 w-600">
+    <h2 class="text-center">Sign in</h2>
+    <div class="row justify-content-center">
+      <div class="col-10">
+        <form (ngSubmit)="login()">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input placeholder="Username" type="text" id="username" name="username" [(ngModel)]="username" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input placeholder="Password" type="password" id="password" name="password" [(ngModel)]="password" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn w-100 mt-3">LOGIN</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  

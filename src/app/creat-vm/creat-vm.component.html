@@ -1,0 +1,113 @@
+<div class="d-class" *ngIf="isLoading">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+<div class="container"> 
+    <form [formGroup]="vmCreation" (ngSubmit)="submit()">
+        <ng-container formArrayName="vm_config">
+            <div class="pt-5">
+                <span>VM naming standard conventions: </span><a href="https://confluence.itron.com/pages/viewpage.action?spaceKey=SysEng&title=Standard+naming+Matrix" target="_blank">https://confluence.itron.com/pages/viewpage.action?spaceKey=SysEng&title=Standard+naming+Matrix</a>
+            </div>
+            <div>
+                <span>Resource Pool selection: </span><a href=" https://splunk.ssnsgs.net/en-US/app/ssn/capacity" target="_blank"> https://splunk.ssnsgs.net/en-US/app/ssn/capacity</a>
+            </div>
+            <h2 class="text-color- pt-2">VM-Creation</h2>
+            <ng-container *ngFor="let type of vmCreation.controls['vm_config']['controls']; let i=index">
+                <div class="mt-2">
+                    <h3>vmw0{{i+1}} <button *ngIf="i > 0" class="btn text-danger" (click)="delete(i)" tooltip="Delete" placement="top"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                      </svg></button></h3>
+                </div>
+                <div class="row" formGroupName="{{i}}">
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Name:</label>
+                        <input type="text" formControlName="Name" class="form-control"
+                            placeholder="Name" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Tmplate</label>
+                        <select class="form-control form-control-sm pl-14" formControlName="Template">
+                            <option value="" selected>Select</option>
+                            <option *ngFor="let type of tmPlate" [value]="type?.name">
+                                {{ type?.desc }} </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Resource Pool</label>
+                        <select class="form-control form-control-sm pl-14" (change)="resourcePoolChange($event, i)" formControlName="ResourcePool">
+                            <option value="" selected>Select</option>
+                            <option *ngFor="let type of resourcePool" [value]="type?.name">
+                                {{ type?.desc }} </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">CPU</label>
+                        <select class="form-control form-control-sm pl-14" formControlName="CPU">
+                            <option value="" selected>Select</option>
+                            <option *ngFor="let type of cpuData" [value]="type">
+                                {{ type }} </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">RAM</label>
+                        <select class="form-control form-control-sm pl-14" formControlName="RAM">
+                            <option value="" selected>Select</option>
+                            <option *ngFor="let type of ramData" [value]="type">
+                                {{ type }} </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Disk-2:</label>
+                        <select class="form-control form-control-sm pl-14" formControlName="DISK2">
+                            <option value="" selected>Select</option>
+                            <option *ngFor="let type of diskData2" [value]="type">
+                                {{ type }} </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Datastore:</label>
+                        <select class="form-control form-control-sm pl-14" formControlName="Datastore">
+                            <option value="" selected>Select</option>
+                            <option *ngFor="let type of datastore" [value]="type.id">
+                                {{ type.name }} </option>
+                        </select>
+                        <!-- <input type="text" class="form-control" formControlName="Datastore" placeholder="Datastore" /> -->
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Network:</label>
+                        <input type="text" class="form-control" formControlName="Network" (input)="clearSubnetmask(i)"  placeholder="Network" />
+                        
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">IP Address:</label>
+                        <input type="text" class="form-control" formControlName="IPAddress" placeholder="IP Address" (input)="checkDuplicate(vmCreation.get('vm_config').controls[i], i)" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">SubnetMask:</label>
+                        <input type="text" class="form-control" formControlName="SubnetMask" placeholder="SubnetMask" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Gateway:</label>
+                        <input type="text" class="form-control" formControlName="Gateway" placeholder="Gateway" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputEmail4">Notes:</label>
+                        <input type="text" class="form-control" formControlName="Notes" placeholder="Notes" />
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div class="mt-2">
+            <span>Do you want to add more records? </span> 
+            <button type="button" class="btn btn-primary m-2" (click)="addRecord()">Yes</button>
+            <button type="button" class="btn btn-secondary">No</button>
+        </div>
+        <div class="my-2 text-right">
+            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal" (click)="cancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" data-dismiss="modal" [disabled]="!vmCreation.valid">Submit</button>
+        </div>
+        
+    </form>
+</div>

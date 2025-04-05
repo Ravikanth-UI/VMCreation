@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+.dropdown_settings{
+    border: 1px solid #c8c7c7;
+    border-radius: 5px;
+    .sub-menu{
+        border-top: 1px solid #c8c7c7;
+        padding: 8px 8px 8px 25px;
+    }
+    a{
+        cursor: pointer;
+    }
+}
+
+.w-600{
+    width: 600px;
+}
+.text-color{
+    color: #717171;
+}
